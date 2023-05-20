@@ -5,5 +5,6 @@ from .views import *
 
 urlpatterns = [
    
-    path('',home ),
+    path('',home),
+    path('student/',post_student),
 ]

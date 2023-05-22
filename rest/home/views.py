@@ -7,12 +7,14 @@ from .serializers import *
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 # Create your views here.
 
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
+@authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def get_books(request):
      print(request.user)
@@ -32,17 +34,18 @@ class RegisterAPI(APIView):
             serializer.save()
             user = User.objects.get(username=serializer.data['username'])
             print(user,'uuuuuuuuuseeeeeeeeeeeeeeeer')
-            token_obj,_ = Token.objects.get_or_create(user=user)
-            print(token_obj,'Tooooooooken')
-            print(str(token_obj))
-            return Response({'status':200,'payload':serializer.data,'token':str(token_obj),'message':'registerd and your token is above'})
+            # token_obj,_ = Token.objects.get_or_create(user=user)
+            refresh = RefreshToken.for_user(user)
+            print(refresh,'Tooooooooken')
+            print(str(refresh))
+            return Response({'status':200,'payload':serializer.data,'refresh':str(refresh),'access':str(refresh.access_token),'message':'registerd and your token is above'})
     except Exception as e:
         print(e)
      
 
 
 class StudentAPI(APIView):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     
 

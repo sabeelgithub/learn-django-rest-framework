@@ -12,5 +12,7 @@ urlpatterns = [
     # path('delete-student/<id>/',delete_student),
     path('get-books/',get_books),
     path('register/',RegisterAPI.as_view()),
+    path('generic-student/',StudentGeneric.as_view()),
+    path('generic-student/<id>/',StudentGeneric1.as_view())
 
 ]

@@ -9,9 +9,20 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework import generics
 
 # Create your views here.
+class StudentGeneric(generics.ListAPIView,generics.CreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentGeneric1(generics.UpdateAPIView,generics.DestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    lookup_field = "id"
+
+
+
 
 @api_view(['GET'])
 @authentication_classes([JWTAuthentication])
@@ -46,6 +57,7 @@ class RegisterAPI(APIView):
 
 class StudentAPI(APIView):
     authentication_classes = [JWTAuthentication]
+    # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
 
@@ -102,6 +114,7 @@ class StudentAPI(APIView):
             return Response({'sataus':200,'payload':serializer.data,'message':'updated'})
         except Exception as e:
             print(e,'thett')
+            id = request.data['id']
             return Response({'status':403,'message':f'id {id} is invalid'})
 
     def delete(self,request):
@@ -118,7 +131,7 @@ class StudentAPI(APIView):
             return Response({'status':200,'message':f'id {id} deleted'})
         except Exception as e:
             print(e)
-            return Response({'status':403,'message':f'id {id} is invalid'})
+            return Response({'status':403,'message':'id is invalid'})
      
 
 
